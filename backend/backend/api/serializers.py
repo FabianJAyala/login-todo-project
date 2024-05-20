@@ -17,5 +17,8 @@ class UserSerializer(serializers.ModelSerializer):
 class ToDosSerializer(serializers.ModelSerializer):
     class Meta:
         model = ToDos
-        fields = ["id", "title", "content", "created_at", "author"]
-        extra_kwargs = {"author": {"read_only": True}}
+        fields = ["id", "title", "content", "complete", "created_at", "author"]
+        extra_kwargs = {
+            "author": {"read_only": True},
+            "complete": {"required": False}
+        }
