@@ -7,9 +7,15 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [isAuthorized, setIsAuthorized] = useState(null);
+  const [userGroups, setUserGroups] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    auth().catch(() => setIsAuthorized(false));
+    const initializeAuth = async () => {
+      await auth();
+      setIsLoading(false);
+    };
+    initializeAuth();
   }, []);
 
   const refreshToken = async () => {
@@ -42,11 +48,21 @@ export function AuthProvider({ children }) {
       await refreshToken();
     } else {
       setIsAuthorized(true);
+      await fetchUserDetails();
+    }
+  };
+
+  const fetchUserDetails = async () => {
+    try {
+      const res = await api.get("/api/users/current/");
+      setUserGroups(res.data.groups);
+    } catch (error) {
+      setIsAuthorized(false);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthorized, setIsAuthorized, auth }}>
+    <AuthContext.Provider value={{ isAuthorized, userGroups, isLoading, setIsAuthorized, auth }}>
       {children}
     </AuthContext.Provider>
   );

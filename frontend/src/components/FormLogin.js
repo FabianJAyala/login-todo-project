@@ -6,29 +6,23 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import { Container, Row, Col, Form, Button, Spinner } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
 
-function FormTemplate({ route, method }) {
+function FormLogin() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { auth } = useAuth();
 
-    const name = method === "login" ? "Login" : "Register";
-
     const handleSubmit = async (e) => {
         setLoading(true);
         e.preventDefault();
 
         try {
-            const res = await api.post(route, { username, password })
-            if (method === "login") {
-                localStorage.setItem(ACCESS_TOKEN, res.data.access);
-                localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-                await auth();
-                navigate("/");
-            } else {
-                navigate("/login");
-            }
+            const res = await api.post("/api/token/", { username, password });
+            localStorage.setItem(ACCESS_TOKEN, res.data.access);
+            localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+            await auth();
+            navigate("/");
         } catch (error) {
             alert(error);
         } finally {
@@ -44,7 +38,7 @@ function FormTemplate({ route, method }) {
                 ) : (
                     <Col md={4}>
                         <Form onSubmit={handleSubmit}>
-                            <h1 className="mb-5">{name} Form</h1>
+                            <h1 className="mb-5">Login Form</h1>
                             <Form.Control
                                 className="mb-3"
                                 type="text"
@@ -60,7 +54,7 @@ function FormTemplate({ route, method }) {
                                 placeholder="Password"
                             />
                             <Button variant="primary" type="submit">
-                                {name}
+                                Login
                             </Button>
                         </Form>
                     </Col>
@@ -70,4 +64,4 @@ function FormTemplate({ route, method }) {
     );
 }
 
-export default FormTemplate;
+export default FormLogin;

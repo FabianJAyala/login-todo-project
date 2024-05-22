@@ -1,7 +1,7 @@
-import FormTemplate from "../components/FormTemplate";
+import FormLogin from "../components/FormLogin";
 
 function Login() {
-    return <FormTemplate route="/api/token/" method="login" />
+    return <FormLogin />
 }
 
 export default Login;

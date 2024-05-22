@@ -3,9 +3,10 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 function ProtectedRoute({ children }) {
-  const { isAuthorized } = useAuth();
+  const { isAuthorized, isLoading } = useAuth();
 
-  if (isAuthorized === null) {
+  if (isLoading) {
+    console.log(isLoading);
     return <div className="justify-content-center">Loading...</div>;
   }
 

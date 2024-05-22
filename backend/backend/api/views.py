@@ -1,9 +1,21 @@
 from django.shortcuts import render
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from rest_framework import generics
-from .serializers import UserSerializer, ToDosSerializer
+from .serializers import UserSerializer, ToDosSerializer, GroupSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import ToDos
+
+
+class CreateUserView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+
+
+class GroupListAPIView(generics.ListAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = [AllowAny]
 
 
 class CurrentUserView(generics.RetrieveAPIView):
@@ -56,9 +68,3 @@ class ToDoDelete(generics.DestroyAPIView):
     def get_queryset(self):
         user = self.request.user
         return ToDos.objects.filter(author=user)
-
-
-class CreateUserView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [AllowAny]
