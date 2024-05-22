@@ -106,7 +106,7 @@ function Home() {
             <option value="false">In Progress</option>
           </Form.Select>
           {isLoading ? (
-            <Spinner className="mt-3 mb-3" animation="border" variant="primary" align="center" />
+            <Spinner className="mt-3 mb-3" size="lg" animation="border" variant="primary" align="center" />
           ) : (
             <h3>{toDoList.map((toDo, index) =>
               <ToDo key={index} toDo={toDo} onDelete={deleteToDo} onUpdate={updateToDo} />

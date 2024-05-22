@@ -3,13 +3,14 @@ import { useState } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
-import { Container, Row, Col, Form, Button, Spinner } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Spinner, Alert } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
 
 function FormLogin() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [invalid, setInvalid] = useState(false);
     const navigate = useNavigate();
     const { auth } = useAuth();
 
@@ -24,7 +25,7 @@ function FormLogin() {
             await auth();
             navigate("/");
         } catch (error) {
-            alert(error);
+            setInvalid(true);
         } finally {
             setLoading(false);
         }
@@ -32,6 +33,18 @@ function FormLogin() {
 
     return (
         <Container className="mt-5 mb-5">
+            <Row className="mb-3 justify-content-center">
+                {invalid ? (
+                    <Col md={6}>
+                        <Alert variant="danger" onClose={() => setInvalid(false)} dismissible>
+                            <Alert.Heading as="h5">Invalid user and/or password.</Alert.Heading>
+                        </Alert>
+                    </Col>
+                ) : (
+                    <>
+                    </>
+                )}
+            </Row>
             <Row className="justify-content-center">
                 {loading ? (
                     <Spinner className="mt-3 mb-3" animation="border" variant="primary" align="center" />
